@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Language Recognition</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        img {
+            border: 3px solid #555;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>Sign Language to Speech</h1>
+    <img src="{{ url_for('video_feed') }}" width="640" height="480">
+
+    <script>
+        // Establish a connection to the server for gesture events
+        const eventSource = new EventSource("{{ url_for('gesture_events') }}");
+
+        // Handle incoming messages (gestures)
+        eventSource.onmessage = function(event) {
+            const gesture = event.data;
+            console.log("Received gesture:", gesture);
+            speak(gesture);
+        };
+
+        // Function to speak the text using the browser's Web Speech API
+        function speak(text) {
+            // Don't speak if the browser is already speaking
+            if (speechSynthesis.speaking) {
+                console.log("SpeechSynthesis is currently busy. Ignoring new request.");
+                return;
+            }
+            if (text) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        // Handle errors
+        eventSource.onerror = function(err) {
+            console.error("EventSource failed:", err);
+        };
+    </script>
+</body>
+</html>
