@@ -124,7 +124,7 @@ def recognize_gesture(hand_landmarks):
 
     # POINTING: Index finger is up, others are down.
     if not thumb_up and index_up and not middle_up and not ring_up and not pinky_up:
-        return "Pointing"
+        return "Question"
 
 
     return None
@@ -177,7 +177,9 @@ while True:
                 last_spoken_time = current_time # Reset speak timer
 
         # Display the currently detected gesture
-        cv2.putText(img, current_gesture, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+        (w, h), _ = cv2.getTextSize(current_gesture, cv2.FONT_HERSHEY_SIMPLEX, 1, 2)
+        cv2.rectangle(img, (50, 50 - h - 10), (50 + w + 10, 50 + 10), (0, 0, 0), -1) # White background
+        cv2.putText(img, current_gesture, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2) # Black text
         print(f"Detected: {current_gesture}")
 
     else:
@@ -192,4 +194,3 @@ while True:
 
 cap.release()
 cv2.destroyAllWindows()
-
