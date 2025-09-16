@@ -9,12 +9,11 @@ mp_hands = mp.solutions.hands
 hands = mp_hands.Hands(max_num_hands=1, min_detection_confidence=0.7)
 mp_draw = mp.solutions.drawing_utils
 
-engine = pyttsx3.init()
 
 def speak(text):
     """Function to speak the given text."""
     if text:
-        
+        engine = pyttsx3.init()     
         engine.say(text)
         engine.runAndWait()
 
@@ -47,9 +46,9 @@ def recognize_gesture(hand_landmarks):
     # --- Gesture Definitions (from most specific to most general) ---
 
     # PLEASE: Flat hand, thumb out, fingers together.
-    dist_index_pinky = math.sqrt((lm[8].x - lm[20].x)**2 + (lm[8].y - lm[20].y)**2)
-    if thumb_up and index_up and middle_up and ring_up and pinky_up and dist_index_pinky < 0.1:
-        return "Please"
+    # dist_index_pinky = math.sqrt((lm[8].x - lm[20].x)**2 + (lm[8].y - lm[20].y)**2)
+    # if thumb_up and index_up and middle_up and ring_up and pinky_up and dist_index_pinky < 0.1:
+    #     return "Please"
 
     # AWESOME: Middle finger down, others up.
     if thumb_up and index_up and not middle_up and ring_up and pinky_up:
@@ -58,11 +57,16 @@ def recognize_gesture(hand_landmarks):
     # THREE: Thumb, Index, Middle up.
     if thumb_up and index_up and middle_up and not ring_up and not pinky_up:
         return "Three"
+    
+    # HELP / FIST: All fingers are folded.
+    thumb_horizontally_in = (handedness == "Right" and lm[4].x > lm[3].x) or (handedness == "Left" and lm[4].x < lm[3].x)
+    if not thumb_horizontally_in and not index_up and not middle_up and not ring_up and not pinky_up:
+        return "HELP"
 
-    # QUESTION: Hooked index finger on a fist.
-    index_hooked = (lm[6].y < lm[5].y) and (lm[8].y > lm[7].y)
-    if not thumb_up and index_hooked and not middle_up and not ring_up and not pinky_up:
-        return "Question"
+    # # QUESTION: Hooked index finger on a fist.
+    # index_hooked = (lm[6].y < lm[5].y) and (lm[8].y > lm[7].y)
+    # if not thumb_up and index_hooked and not middle_up and not ring_up and not pinky_up:
+    #     return "Question"
         
     if not thumb_up and index_up and middle_up and ring_up and not pinky_up:
         return "Water"
@@ -70,8 +74,13 @@ def recognize_gesture(hand_landmarks):
     # EAT / BUNCHED HAND: Fingers and thumb bunched together.
     dist_thumb_index = math.sqrt((lm[4].x - lm[8].x)**2 + (lm[4].y - lm[8].y)**2)
     dist_thumb_middle = math.sqrt((lm[4].x - lm[12].x)**2 + (lm[4].y - lm[12].y)**2)
-    if dist_thumb_index < 0.06 and dist_thumb_middle < 0.06 and not pinky_up:
-        return "Eat"
+    # if dist_thumb_index < 0.06 and dist_thumb_middle < 0.06 and not pinky_up:
+    #     return "Eat"
+    
+       # BEAUTIFUL: Index and Ring up, others down.
+    if not index_up and middle_up and  ring_up and pinky_up and not thumb_up:
+        return "Beautiful"
+
 
     # I WANT TO TALK: Claw-like hand, fingers partially curled.
     # index_curve = math.sqrt((lm[8].x - lm[5].x)**2 + (lm[8].y - lm[5].y)**2)
@@ -85,7 +94,7 @@ def recognize_gesture(hand_landmarks):
 
     # I LOVE YOU: Thumb, Index, Pinky are up. Middle, Ring are down.
     if thumb_up and index_up and not middle_up and not ring_up and pinky_up:
-        return "I Love You"
+        return "Thank You"
 
     # VICTORY/PEACE: Index and Middle are up.
     if not thumb_up and index_up and middle_up and not ring_up and not pinky_up:
@@ -105,7 +114,7 @@ def recognize_gesture(hand_landmarks):
 
     # YES / THUMBS UP: Thumb is up, other four fingers are folded.
     thumb_vertically_up = lm[4].y < lm[2].y
-    if thumb_vertically_up and not index_up and not middle_up and not ring_up and not pinky_up:
+    if thumb_up and not index_up and not middle_up and not ring_up and not pinky_up:
         return "YES"
 
     # NO / THUMBS DOWN: Thumb is pointing down, other four fingers are folded.
@@ -113,10 +122,6 @@ def recognize_gesture(hand_landmarks):
     if thumb_vertically_down and not index_up and not middle_up and not ring_up and not pinky_up:
         return "NO"
 
-    # HELP / FIST: All fingers are folded.
-    if not thumb_up and not index_up and not middle_up and not ring_up and not pinky_up:
-        return "HELP"
-        
     # POINTING: Index finger is up, others are down.
     if not thumb_up and index_up and not middle_up and not ring_up and not pinky_up:
         return "Pointing"
@@ -187,3 +192,4 @@ while True:
 
 cap.release()
 cv2.destroyAllWindows()
+

@@ -47,9 +47,9 @@ def recognize_gesture(hand_landmarks):
     if thumb_up and index_up and middle_up and not ring_up and not pinky_up:
         return "Three"
 
-    index_hooked = (lm[6].y < lm[5].y) and (lm[8].y > lm[7].y)
-    if not thumb_up and index_hooked and not middle_up and not ring_up and not pinky_up:
-        return "Question"
+    # index_hooked = (lm[6].y < lm[5].y) and (lm[8].y > lm[7].y)
+    # if not thumb_up and index_hooked and not middle_up and not ring_up and not pinky_up:
+    #     return "Question"
         
     if not thumb_up and index_up and middle_up and ring_up and not pinky_up:
         return "Water"
@@ -65,7 +65,7 @@ def recognize_gesture(hand_landmarks):
     #     return "I want to talk"
 
     if thumb_up and index_up and not middle_up and not ring_up and pinky_up:
-        return "I Love You"
+        return "Thank You"
 
     if not thumb_up and index_up and middle_up and not ring_up and not pinky_up:
         return "Victory"

@@ -12,9 +12,9 @@ This project uses your webcam to recognize hand gestures in real-time and conver
 
 - **Greetings:** HELLO
 - **Basic Needs:** Eat, Water
-- **Responses:** YES, NO, Please, Okay
-- **Social:** I Love You, Call me, I want to talk
-- **General:** Victory, Awesome, Three, Pointing, Question, HELP
+- **Responses:** YES, NO, Please❌, Okay
+- **Social:** Thank You, Call me, I want to talk❌
+- **General:** Victory, Awesome, Three, Pointing, Question❌, HELP
 
 ## Setup and Usage
 
