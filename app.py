@@ -51,7 +51,7 @@ def recognize_gesture(hand_landmarks):
     #     return "Please"
 
     # AWESOME: Middle finger down, others up.
-    if thumb_up and index_up and not middle_up and ring_up and pinky_up:
+    if not thumb_up and index_up and not middle_up and ring_up and pinky_up:
         return "Awesome"
 
     # THREE: Thumb, Index, Middle up.
@@ -74,8 +74,8 @@ def recognize_gesture(hand_landmarks):
     # EAT / BUNCHED HAND: Fingers and thumb bunched together.
     dist_thumb_index = math.sqrt((lm[4].x - lm[8].x)**2 + (lm[4].y - lm[8].y)**2)
     dist_thumb_middle = math.sqrt((lm[4].x - lm[12].x)**2 + (lm[4].y - lm[12].y)**2)
-    # if dist_thumb_index < 0.06 and dist_thumb_middle < 0.06 and not pinky_up:
-    #     return "Eat"
+    if not thumb_up and not index_up and not middle_up and ring_up and pinky_up and dist_thumb_index < 0.1 and dist_thumb_middle < 0.1:
+        return "Eat"
     
        # BEAUTIFUL: Index and Ring up, others down.
     if not index_up and middle_up and  ring_up and pinky_up and not thumb_up:
